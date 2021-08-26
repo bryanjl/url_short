@@ -4,11 +4,15 @@ const {
     redirectURL
 } = require('../controllers/link');
 
+const {
+    authorizeUser
+} = require('../middleware/auth');
+
 const router = express.Router();
 
 router
     .route('/')
-    .post(shortenURL);
+    .post(authorizeUser, shortenURL);
 
 router
     .route('/:id')

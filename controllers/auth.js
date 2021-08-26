@@ -28,6 +28,22 @@ exports.loginUser = asyncHandler(async (req, res, next) => {
     jwtResponse(user, 200, res); //send a jwt token back to client
 });
 
+exports.getMe = asyncHandler(async (req, res, next) => {
+    //check if user is logged in -> coming from authorizeUser
+    if(!req.user){
+        return next(`You are not signed in`);
+    }
+
+    const user = await User.findById(req.user);
+
+    res
+    .status(200)
+    .json({
+        success: true,
+        data: user
+    });
+});
+
 const jwtResponse = function(user, statusCode, res) {
     //get token
     const token = user.signJWT();

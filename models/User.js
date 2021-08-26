@@ -25,7 +25,11 @@ const UserSchema = new mongoose.Schema({
     }
 });
 
-UserSchema.pre('save', async function() {
+UserSchema.pre('save', async function(next) {
+    if(!this.isModified('password')){
+        next();
+    }
+
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
 });
@@ -38,6 +42,11 @@ UserSchema.methods.matchPassword = async function(enteredPassword) {
 UserSchema.methods.signJWT = function() {
     const token = jwt.sign({ id: this._id }, process.env.JWT_SECRET);
     return token;
+}
+
+UserSchema.methods.checkJWT = function() {
+    let payload = jwt.verify(token, process.env.JWT_SECRET);
+    console.log(payload);
 }
 
 module.exports = mongoose.model('User', UserSchema);
