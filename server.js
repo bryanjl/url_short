@@ -1,5 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const morgan = require('morgan');
+const mongoSanitize = require('express-mongo-sanitize');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/error');
 
@@ -14,8 +16,17 @@ connectDB();
 
 const app = express();
 
+//logger for dev mode
+if(process.env.NODE_ENVIRONMENT === 'development'){
+    app.use(morgan('dev'));
+}
+
+
 //body parser
 app.use(express.json());
+
+//Sanitize - SQL injection protection
+app.use(mongoSanitize());
 
 //router mounting
 app.use('/', links);
