@@ -1,7 +1,10 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
+//security
 const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require('helmet');
+
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/error');
 
@@ -27,6 +30,7 @@ app.use(express.json());
 
 //Sanitize - SQL injection protection
 app.use(mongoSanitize());
+app.use(helmet());
 
 //router mounting
 app.use('/', links);
