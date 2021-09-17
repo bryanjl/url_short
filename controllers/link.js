@@ -31,3 +31,7 @@ exports.redirectURL = asyncHandler(async(req, res, next) => {
 
     res.redirect(`https://${url}`);
 });
+
+exports.toDocs = (req, res, next) => {
+    res.redirect('https://documenter.getpostman.com/view/11007762/U16qJiEy');
+}

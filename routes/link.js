@@ -1,7 +1,8 @@
 const express =  require('express');
 const {
     shortenURL,
-    redirectURL
+    redirectURL,
+    toDocs
 } = require('../controllers/link');
 
 const {
@@ -12,7 +13,8 @@ const router = express.Router();
 
 router
     .route('/')
-    .post(authorizeUser, shortenURL);
+    .post(authorizeUser, shortenURL)
+    .get(toDocs);
 
 router
     .route('/:id')
