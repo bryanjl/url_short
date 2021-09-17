@@ -4,6 +4,7 @@
   "description": "URL shortener microservice",
   "main": "index.js",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server"
   },
@@ -22,5 +23,8 @@
     "nodemon": "^2.0.12",
     "rand-token": "^1.0.1",
     "snyk": "^1.704.0"
+  },
+  "engines": {
+    "node": "12.18.3"
   }
 }

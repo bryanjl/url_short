@@ -20,10 +20,13 @@ connectDB();
 const app = express();
 
 //logger for dev mode
-if(process.env.NODE_ENVIRONMENT === 'development'){
+if(process.env.NODE_ENV === 'development'){
     app.use(morgan('dev'));
 }
 
+// if(Process.env.NODE_ENV === 'production'){
+//     app.use(express.static('client/build'));
+// }
 
 //body parser
 app.use(express.json());
