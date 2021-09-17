@@ -22,8 +22,12 @@ exports.shortenURL = asyncHandler(async (req, res, next) => {
     })
 });
 
-exports.redirectURL = async(req, res, next) => {
-    const redirectLink = await Link.findOne({ short: req.params.id });
+exports.redirectURL = asyncHandler(async(req, res, next) => {
 
-    res.redirect(redirectLink.url);
-}
+    const redirectLink = await Link.findOne({ short: req.params.id });
+    const url = redirectLink.url;
+    
+//need to make more dynamic function for adding https:// to beginning of redirect
+
+    res.redirect(`https://${url}`);
+});
