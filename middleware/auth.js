@@ -2,6 +2,10 @@ const asyncHandler = require('../middleware/async');
 const jwt = require('jsonwebtoken');
 
 exports.authorizeUser = asyncHandler(async (req, res, next) => {
+    if(!req.headers.authorization){
+        next();
+    }
+    
     let token;
 
     //check if bearer token and get token
