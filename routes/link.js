@@ -13,7 +13,7 @@ const router = express.Router();
 
 router
     .route('/')
-    .post(shortenURL)
+    .post(authorizeUser, shortenURL)
     .get(toDocs);
 
 router
