@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 
 exports.authorizeUser = asyncHandler(async (req, res, next) => {
     if(!req.headers.authorization){
-        next();
+        return next();
     }
     
     let token;
