@@ -13,7 +13,7 @@ const router = express.Router();
 
 router
     .route('/')
-    .post(authorizeUser, shortenURL)
+    .post(shortenURL)
     .get(toDocs);
 
 router
@@ -21,3 +21,6 @@ router
     .get(redirectURL);
 
 module.exports = router;
+
+
+// .post(authorizeUser, shortenURL)
