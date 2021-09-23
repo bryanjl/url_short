@@ -34,8 +34,11 @@ exports.redirectURL = asyncHandler(async(req, res, next) => {
     link.visits++;
 
     //get location 
-    console.log(req.socket.remoteAddress);
-    link.address.push(req.socket.remoteAddress);
+    // console.log(req.headers['x-forwarded-for']);
+
+    // console.log(req.socket.remoteAddress);
+    link.address.push(req.headers['x-forwarded-for']);
+
 
     const redirectUrl = link.url;
     res.redirect(redirectUrl);
