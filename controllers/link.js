@@ -1,6 +1,7 @@
 const asyncHandler = require('../middleware/async');
 const Link = require('../models/Link');
 const User = require('../models/User');
+const geoLookup = require('../middleware/geoLookup');
 
 exports.shortenURL = asyncHandler(async (req, res, next) => {
     
@@ -33,12 +34,8 @@ exports.redirectURL = asyncHandler(async(req, res, next) => {
     //Add 1 to visits for analytics
     link.visits++;
 
-    //get location 
-    // console.log(req.headers['x-forwarded-for']);
-
-    // console.log(req.socket.remoteAddress);
-    link.address.push(req.headers['x-forwarded-for']);
-
+    //get location -> geoLookup returns country code string
+    link.country_code.push(geoLookup(req.headers['x-forwarded-for']));
 
     const redirectUrl = link.url;
     res.redirect(redirectUrl);

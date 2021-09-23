@@ -13,7 +13,7 @@ const LinkSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    address: {
+    country_code: {
         type: [String]
     }
 });

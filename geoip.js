@@ -4,7 +4,8 @@ const geoLookup = () => {
     let ip = "113.23.104.177";
     let geo = geoip.lookup(ip);
 
-    console.log(geo);
+    console.log(geo.city, geo.country);
 }
 
 geoLookup();
+
