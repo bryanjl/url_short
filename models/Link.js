@@ -8,11 +8,23 @@ const LinkSchema = new mongoose.Schema({
     },
     short: {
         type: String
+    },
+    visits: {
+        type: Number,
+        default: 0
+    },
+    address: {
+        type: [String]
     }
 });
 
 LinkSchema.pre('save', function() {
-    this.short = randToken.generate(7);
+    //only create random token on first save
+    if(this.isNew){
+        this.short = randToken.generate(7);
+    }    
 })
 
 module.exports = mongoose.model('Link', LinkSchema);
+
+//need to make more dynamic function for adding https:// to beginning of redirect presave hook

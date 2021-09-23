@@ -28,14 +28,31 @@ exports.shortenURL = asyncHandler(async (req, res, next) => {
 
 exports.redirectURL = asyncHandler(async(req, res, next) => {
 
-    const redirectLink = await Link.findOne({ short: req.params.id });
-    const url = redirectLink.url;
+    const link = await Link.findOne({ short: req.params.id });
     
-//need to make more dynamic function for adding https:// to beginning of redirect
+    //Add 1 to visits for analytics
+    link.visits++;
 
-    res.redirect(url);
+    //get location 
+    console.log(req.socket.remoteAddress);
+    link.address.push(req.socket.remoteAddress);
+
+    const redirectUrl = link.url;
+    res.redirect(redirectUrl);
+
+    //save
+    link.save();
 });
 
 exports.toDocs = (req, res, next) => {
     res.redirect('https://documenter.getpostman.com/view/11007762/U16qJiEy');
 }
+
+exports.getLinkInfo = asyncHandler(async(req, res, next) => {
+    const link = await Link.findOne({ short: req.params.id });
+
+    res.status(200).json({
+        success: true,
+        data: link
+    })
+});

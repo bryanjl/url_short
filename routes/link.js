@@ -2,7 +2,8 @@ const express =  require('express');
 const {
     shortenURL,
     redirectURL,
-    toDocs
+    toDocs,
+    getLinkInfo
 } = require('../controllers/link');
 
 const {
@@ -19,6 +20,10 @@ router
 router
     .route('/:id')
     .get(redirectURL);
+
+router
+    .route('/link/:id')
+    .get(getLinkInfo)
 
 module.exports = router;
 
