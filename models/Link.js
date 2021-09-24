@@ -16,8 +16,16 @@ const LinkSchema = new mongoose.Schema({
     country_code: {
         type: [String]
     },
-    host_name: {
+    referer: {
         type: [String]
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now()
+    },
+    createdBy: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
     }
 });
 
