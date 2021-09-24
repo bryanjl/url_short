@@ -32,7 +32,7 @@ exports.redirectURL = asyncHandler(async(req, res, next) => {
     const link = await Link.findOne({ short: req.params.id });
 
     //get host name (nwhere the client came from)
-    let host = req.headers.host;
+    let host = req.headers.referer;
     link.host_name.push(host);
     // console.log(host);
     
