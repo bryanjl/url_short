@@ -15,6 +15,9 @@ const LinkSchema = new mongoose.Schema({
     },
     country_code: {
         type: [String]
+    },
+    host_name: {
+        type: [String]
     }
 });
 

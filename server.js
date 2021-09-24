@@ -29,7 +29,7 @@ if(process.env.NODE_ENV === 'development'){
 //     app.use(express.static('client/build'));
 // }
 
-//cors
+//cors -> used in production??
 app.use(cors());
 
 //body parser
