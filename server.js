@@ -4,6 +4,7 @@ const morgan = require('morgan');
 //security
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
+const cors = require('cors');
 
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/error');
@@ -27,6 +28,9 @@ if(process.env.NODE_ENV === 'development'){
 // if(Process.env.NODE_ENV === 'production'){
 //     app.use(express.static('client/build'));
 // }
+
+//cors -> used in production??
+app.use(cors());
 
 //body parser
 app.use(express.json());
