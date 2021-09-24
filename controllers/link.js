@@ -1,25 +1,20 @@
 const asyncHandler = require('../middleware/async');
 const Link = require('../models/Link');
 const User = require('../models/User');
-const geoLookup = require('../middleware/geoLookup');
+// const geoLookup = require('../middleware/geoLookup');
+// const refererHost = require('../middleware/refererHost');
 
 exports.shortenURL = asyncHandler(async (req, res, next) => {
-    
-    console.log(req.headers.authorization);
-
 
     const link = await Link.create(req.body);
 
-    let user;
+    // let user;
 
-    console.log(req.user);
     if(req.user){
-        user = await User.findById(req.user);
+        let user = await User.findById(req.user);
         user.links.push(link._id);
         user.save();
     }
-
-
 
     res.status(200).json({
         success: true,
@@ -31,25 +26,23 @@ exports.redirectURL = asyncHandler(async(req, res, next) => {
 
     const link = await Link.findOne({ short: req.params.id });
 
-    //get referer host from headers
-    if(req.headers.referer){
-        link.referer.push(host);    
-    } else {
-        link.referer.push('other');
-    }
+    //add to frequency count of referer host
+    link.refererCount(req.headers.referer);
         
-    //Add 1 to visits for analytics
+    //Add 1 to visits
     link.visits++;
 
-    //get location -> geoLookup returns country code string
-    link.country_code.push(geoLookup(req.headers['x-forwarded-for']));
+    //get location 
+    link.getLocation(req.headers['x-forwarded-for']);
+    
+    // Accessed date
+    link.accessedAt.push(Date.now());
 
-    // console.log(req);
-
+    //redirect
     const redirectUrl = link.url;
     res.redirect(redirectUrl);
 
-    //save
+    //save changes after redirect 
     link.save();
 });
 

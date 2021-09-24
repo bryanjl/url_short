@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const randToken = require('rand-token');
+const refererHost = require('../middleware/refererHost');
+const geoLookup = require('../middleware/geoLookup');
 
 const LinkSchema = new mongoose.Schema({
     url: {
@@ -17,7 +19,18 @@ const LinkSchema = new mongoose.Schema({
         type: [String]
     },
     referer: {
-        type: [String]
+        facebook: {
+            type: Number,
+            default: 0
+        },
+        twitter: {
+            type: Number,
+            default: 0
+        },
+        other: {
+            type: Number,
+            default: 0
+        }
     },
     createdAt: {
         type: Date,
@@ -26,6 +39,9 @@ const LinkSchema = new mongoose.Schema({
     createdBy: {
         type: mongoose.Schema.ObjectId,
         ref: 'User',
+    },
+    accessedAt: {
+        type: [Date]
     }
 });
 
@@ -34,7 +50,22 @@ LinkSchema.pre('save', function() {
     if(this.isNew){
         this.short = randToken.generate(7);
     }    
-})
+});
+
+LinkSchema.methods.refererCount = function(reqHeaderReferer) {
+    if(!reqHeaderReferer){
+        this.referer.other++;
+    } else {
+        let refHost = refererHost(reqHeaderReferer);
+        this.referer[refHost]++;
+    }
+}
+
+LinkSchema.methods.getLocation = function(reqHeaderXForward) {
+    if(reqHeaderXForward) {
+        this.country_code.push(geoLookup(reqHeaderXForward));
+    }
+}
 
 module.exports = mongoose.model('Link', LinkSchema);
 
