@@ -1,21 +1,19 @@
 const asyncHandler = require('../middleware/async');
 const Link = require('../models/Link');
 const User = require('../models/User');
-// const geoLookup = require('../middleware/geoLookup');
-// const refererHost = require('../middleware/refererHost');
 
 exports.shortenURL = asyncHandler(async (req, res, next) => {
+    // console.log(req.headers);
+
 
     const link = await Link.create(req.body);
-
-    // let user;
 
     if(req.user){
         let user = await User.findById(req.user);
         user.links.push(link._id);
         user.save();
     }
-
+    
     res.status(200).json({
         success: true,
         data: link
