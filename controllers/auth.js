@@ -11,6 +11,8 @@ exports.registerUser = asyncHandler(async (req, res, next) => {
 });
 
 exports.loginUser = asyncHandler(async (req, res, next) => {
+    // console.log(req.body.username, req.body.password);
+
     //find the user based on username -> get the password field included
     const user = await User.findOne({ username: req.body.username }).select('+password');
 
@@ -34,7 +36,7 @@ exports.getMe = asyncHandler(async (req, res, next) => {
         return next(`You are not signed in`);
     }
 
-    const user = await User.findById(req.user);
+    const user = await User.findById(req.user).populate({ path: 'links', select: 'url' });
 
     res
     .status(200)
@@ -52,6 +54,7 @@ const jwtResponse = function(user, statusCode, res) {
         .status(statusCode)
         .json({
             success: true,
+            username: user.username,
             token
         })
 }
