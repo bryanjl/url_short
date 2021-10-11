@@ -42,6 +42,9 @@ const LinkSchema = new mongoose.Schema({
     },
     accessedAt: {
         type: [Date]
+    },
+    title: {
+        type: String
     }
 });
 

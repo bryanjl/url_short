@@ -3,9 +3,7 @@ const Link = require('../models/Link');
 const User = require('../models/User');
 
 exports.shortenURL = asyncHandler(async (req, res, next) => {
-    // console.log(req.headers);
-
-
+    
     const link = await Link.create(req.body);
 
     if(req.user){
@@ -49,7 +47,7 @@ exports.toDocs = (req, res, next) => {
 }
 
 exports.getLinkInfo = asyncHandler(async(req, res, next) => {
-    const link = await Link.findOne({ short: req.params.id });
+    const link = await Link.findById(req.params.id);
 
     res.status(200).json({
         success: true,

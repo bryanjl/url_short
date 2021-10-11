@@ -36,8 +36,11 @@ exports.getMe = asyncHandler(async (req, res, next) => {
         return next(`You are not signed in`);
     }
 
-    const user = await User.findById(req.user).populate({ path: 'links', select: 'url' });
-
+    const user = await User.findOne({ _id: req.user }).populate({ 
+        path: 'links', 
+        select: 'url title' 
+    });
+    
     res
     .status(200)
     .json({
