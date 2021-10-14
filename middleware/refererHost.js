@@ -7,6 +7,9 @@ const refererHost = (address) => {
         }
     
 
+    // const urlObj = new URL(address);
+    // console.log(urlObj);
+
     if(refererList[address]){
         return refererList[address];
     } else {

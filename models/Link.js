@@ -43,6 +43,9 @@ const LinkSchema = new mongoose.Schema({
     accessedAt: {
         type: [Date]
     },
+    visitsPerDay: {
+        type: Object
+    },
     title: {
         type: String
     }
@@ -52,6 +55,13 @@ LinkSchema.pre('save', function() {
     //only create random token on first save
     if(this.isNew){
         this.short = randToken.generate(7);
+        
+        //set initial object for visitsPerDay
+        let initialDate = new Date();
+        initialDate = initialDate.toISOString().split('T')[0];
+        this.visitsPerDay = {
+            [initialDate]: 1
+        }  
     }    
 });
 
@@ -67,6 +77,19 @@ LinkSchema.methods.refererCount = function(reqHeaderReferer) {
 LinkSchema.methods.getLocation = function(reqHeaderXForward) {
     if(reqHeaderXForward) {
         this.country_code.push(geoLookup(reqHeaderXForward));
+    }
+}
+
+LinkSchema.methods.visitsPerDayObj = function() {
+    //format date
+    const currDate = new Date();
+    let yyyyMMdd = currDate.toISOString().split('T')[0];
+
+    //update object for formatted date yyyy-mm-dd
+    if(!this.visitsPerDay[yyyyMMdd]){
+        this.visitsPerDay[yyyyMMdd] = 1;
+    } else {
+        this.visitsPerDay[yyyyMMdd]++;
     }
 }
 

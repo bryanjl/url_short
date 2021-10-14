@@ -19,11 +19,12 @@ exports.shortenURL = asyncHandler(async (req, res, next) => {
 });
 
 exports.redirectURL = asyncHandler(async(req, res, next) => {
-
+    // console.log('hello');
     const link = await Link.findOne({ short: req.params.id });
 
     //add to frequency count of referer host
     link.refererCount(req.headers.referer);
+    // console.log(req.headers.referer);
         
     //Add 1 to visits
     link.visits++;
@@ -33,6 +34,10 @@ exports.redirectURL = asyncHandler(async(req, res, next) => {
     
     // Accessed date
     link.accessedAt.push(Date.now());
+
+    //visits per day
+    link.visitsPerDayObj();
+    link.markModified('visitsPerDay');
 
     //redirect
     const redirectUrl = link.url;
