@@ -3,6 +3,8 @@ const Link = require('../models/Link');
 const User = require('../models/User');
 
 exports.shortenURL = asyncHandler(async (req, res, next) => {
+
+    console.log(req.body);
     
     const link = await Link.create(req.body);
 
