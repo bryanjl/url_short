@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const randToken = require('rand-token');
-const refererHost = require('../middleware/refererHost');
 const geoLookup = require('../middleware/geoLookup');
 
 const LinkSchema = new mongoose.Schema({
@@ -19,18 +18,8 @@ const LinkSchema = new mongoose.Schema({
         type: [String]
     },
     referer: {
-        facebook: {
-            type: Number,
-            default: 0
-        },
-        twitter: {
-            type: Number,
-            default: 0
-        },
-        other: {
-            type: Number,
-            default: 0
-        }
+        type: Object,
+        default: {}
     },
     createdAt: {
         type: Date,
@@ -69,8 +58,13 @@ LinkSchema.methods.refererCount = function(reqHeaderReferer) {
     if(!reqHeaderReferer){
         this.referer.other++;
     } else {
-        let refHost = refererHost(reqHeaderReferer);
-        this.referer[refHost]++;
+        // let refHost = refererHost(reqHeaderReferer);
+        if(this.referer[reqHeaderReferer]){
+            this.referer[reqHeaderReferer]++;
+        } else {
+            this.referer[reqHeaderReferer] = 1;
+        }
+        
     }
 }
 
