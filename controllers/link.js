@@ -4,7 +4,7 @@ const User = require('../models/User');
 
 exports.shortenURL = asyncHandler(async (req, res, next) => {
 
-    console.log(req.body);
+    // console.log(req.body);
     
     const link = await Link.create(req.body);
 
@@ -23,6 +23,7 @@ exports.shortenURL = asyncHandler(async (req, res, next) => {
 exports.redirectURL = asyncHandler(async(req, res, next) => {
     // console.log('hello');
     const link = await Link.findOne({ short: req.params.id });
+    console.log(link);
 
     //add to frequency count of referer host
     link.refererCount(req.headers.referer);
