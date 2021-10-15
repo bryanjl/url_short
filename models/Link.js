@@ -51,7 +51,9 @@ LinkSchema.pre('save', function() {
             [initialDate]: 1
         }
         
-        this.referer = {};
+        this.referer = {
+            other: 0
+        };
     }    
 });
 
