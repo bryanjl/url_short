@@ -18,8 +18,7 @@ const LinkSchema = new mongoose.Schema({
         type: [String]
     },
     referer: {
-        type: Object,
-        default: {}
+        type: Object
     },
     createdAt: {
         type: Date,
@@ -50,7 +49,9 @@ LinkSchema.pre('save', function() {
         initialDate = initialDate.toISOString().split('T')[0];
         this.visitsPerDay = {
             [initialDate]: 1
-        }  
+        }
+        
+        this.referer = {};
     }    
 });
 
