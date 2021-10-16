@@ -26,7 +26,9 @@ exports.redirectURL = asyncHandler(async(req, res, next) => {
     console.log(link);
 
     //add to frequency count of referer host
+    // link.refererCount(req.headers.referer);
     link.refererCount(req.headers.referer);
+    link.markModified('referer');
     // console.log(req.headers.referer);
         
     //Add 1 to visits
