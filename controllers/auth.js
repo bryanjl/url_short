@@ -11,13 +11,13 @@ exports.registerUser = asyncHandler(async (req, res, next) => {
 });
 
 exports.loginUser = asyncHandler(async (req, res, next) => {
-    // console.log(req.body.username, req.body.password);
+    if(!req.body.username || !req.body.password) return next(new ErrorResponse(`Please enter email and password`, 400));
 
     //find the user based on username -> get the password field included
     const user = await User.findOne({ username: req.body.username }).select('+password');
 
     if(!user) {
-        return next(new ErrorResponse(`${req.body.username} cannot be found`));
+        return next(new ErrorResponse(`${req.body.username} cannot be found`, 404));
     }
 
     //check if password matches
