@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const asyncHandler = require('../middleware/async');
 const ErrorResponse = require("../utils/ErrorResponse");
+const sendEmail = require('../utils/sendEmail');
 
 
 exports.registerUser = asyncHandler(async (req, res, next) => {
@@ -31,6 +32,7 @@ exports.loginUser = asyncHandler(async (req, res, next) => {
 });
 
 exports.getMe = asyncHandler(async (req, res, next) => {
+    
     //check if user is logged in -> coming from authorizeUser
     if(!req.user){
         return next(`You are not signed in`);
