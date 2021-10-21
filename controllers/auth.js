@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const User = require("../models/User");
 const asyncHandler = require('../middleware/async');
 const ErrorResponse = require("../utils/ErrorResponse");
@@ -32,7 +33,7 @@ exports.loginUser = asyncHandler(async (req, res, next) => {
 });
 
 exports.getMe = asyncHandler(async (req, res, next) => {
-    
+    // console.log(req.protocol, req.get(('host')));
     //check if user is logged in -> coming from authorizeUser
     if(!req.user){
         return next(`You are not signed in`);
@@ -49,6 +50,74 @@ exports.getMe = asyncHandler(async (req, res, next) => {
         success: true,
         data: user
     });
+});
+
+exports.forgotPassword = asyncHandler(async (req,  res, next) => {
+    //check if user exists
+    let user  = await User.findOne({ username: req.body.email });
+
+    if(!user){
+        return next(new ErrorResponse(`User with email ${req.body.email} does not exist`, 404)); 
+    }
+
+    let resetToken = user.getResetToken(); //need to make method
+
+    await user.save({ validationBeforeSave: false });
+
+    const url =  `${req.protocol}://${req.get('host')}/auth/resetpassword/${resetToken}`
+    //send email to supplied email address
+    let emailOptions = {
+        email: req.body.email,
+        subject: 'Reset Password',
+        message: `You are recieving this email because someone has requested to reset your password for the URL Shortening Chrome extension. Please visit ${url}`
+    };
+
+    try {
+        await sendEmail(emailOptions);
+
+        res.status(200).json({
+            success: true,
+            data: "email sent"
+        });
+    } catch (error) {
+        console.log(error);
+
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpire = undefined;
+
+        await user.save({ validateBeforeSave: false });
+
+        return next(new ErrorResponse(`Email could not be sent`, 500));
+    }
+});
+
+exports.resetPassword = asyncHandler(async (req, res, next) => {
+    console.log(req.params.resettoken);
+    let resetPasswordToken = crypto
+                                .createHash('sha256')
+                                .update(req.params.resettoken)
+                                .digest('hex');
+
+    let user = await User.findOne({ 
+        resetPasswordToken,
+        resetPasswordExpire: { $gt: Date.now() } 
+    });
+
+    console.log(resetPasswordToken, user);
+
+
+
+    if(!user){
+        return next(new ErrorResponse(`Invalid token`, 400));
+    }
+
+    user.password = req.body.password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+
+    await user.save();
+
+    jwtResponse(user, 200, res);
 });
 
 const jwtResponse = function(user, statusCode, res) {

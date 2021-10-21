@@ -3,7 +3,9 @@ const express = require('express');
 const {
     registerUser,
     loginUser,
-    getMe
+    getMe,
+    forgotPassword,
+    resetPassword
 } = require('../controllers/auth');
 
 const {
@@ -23,5 +25,13 @@ router
 router
     .route('/getme')
     .get(authorizeUser, getMe);
+
+router
+    .route('/forgotpassword')
+    .post(forgotPassword);
+
+router
+    .route('/resetpassword/:resettoken')
+    .put(resetPassword);
 
 module.exports = router;
